@@ -18,13 +18,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             echo '<script language="javascript">';
             echo 'alert("Something Error!! Gagal Menghapus Data")';
             echo '</script>';
-        };
-    } else if (isset($_GET["tl-orang"]) && isset($_GET["nama-orang"])) {
+        }; 
+    } else if (isset($_GET["tl-orang"]) && isset($_GET["nama-orang"]) && isset($_GET["tgl-kelahiran"])) {
         $tlOrang = (int)($_GET["tl-orang"]);
         $namaOrang = $_GET["nama-orang"];
+        $tglKelahiran = $_GET["tgl-kelahiran"];
         $template = new \PhpOffice\PhpWord\TemplateProcessor(__DIR__ . "/download/KU_ulang_tahun_kelahiran.docx");
         $template->setValue('title', "$tlOrang");
         $template->setValue('nama-orang', "$namaOrang");
+        $template->setValue('tgl-kelahiran', "$tglKelahiran");
+        $template->setValue('tahun', date("Y"));
+        
         header("Content-Disposition: attachment; filename=KU-UlangTahun-$namaOrang.docx");
         $template->saveAs("php://output");
     }
@@ -217,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                                 <td>
                                                                     <a onclick="return  confirm('do you want to update Y/N')" href="form_data_orang.php?id-orang=<?php echo $row["id_orang"]; ?>"><button type="button" class="btn btn-primary" style="font-size: 12px !important;><i class=" fa fa-edit"></i> Edit</button></a>
                                                                     <a onclick="return  confirm('do you want to delete Y/N')" href="table_data_kelahiran.php?id-orang=<?php echo $row["id_orang"]; ?>"><button type="button" class="btn btn-danger" style="font-size: 12px !important;><i class=" fa fa-remove"></i> Hapus</button></a>
-                                                                    <a href="table_data_kelahiran.php?tl-orang=<?php echo getAge($row['tl_orang']) . "&nama-orang=" . $row['nama_orang']; ?>"><button type="button" class="btn btn-info" style="font-size: 12px !important;"><i class=" fa fa-download"></i> Unduh</button></a>
+                                                                    <a href="table_data_kelahiran.php?tl-orang=<?php echo getAge($row['tl_orang']) . "&nama-orang=" . $row['nama_orang'] . "&tgl-kelahiran=" . date('d F Y', strtotime($row['tl_orang'])); ?>"><button type="button" class="btn btn-info" style="font-size: 12px !important;"><i class=" fa fa-download"></i> Unduh</button></a>
                                                                 </td>
                                                             </tr>
                                                         <?php } ?>
